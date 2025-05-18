@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sleep Timer</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      width: 120px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #6200ee;
+      color: #fff;
+    }
+
+    button:hover {
+      background-color: #3700b3;
+    }
+
+    #countdown {
+      font-size: 32px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🐻 Chibi Bear Sprite -->
+  <img src="bear.png" alt="Chibi Bear">
+
+  <h1>Sleep Timer</h1>
+
+  <input type="number" id="minutesInput" placeholder="Minutes" min="1">
+
+  <div>
+    <button onclick="startTimer()">Start</button>
+    <button onclick="cancelTimer()">Cancel</button>
+  </div>
+
+  <div id="countdown">00:00</div>
+
+  <!-- 🎶 Background Music (hidden until play) -->
+  <audio id="alarmSound" src="alarm.mp3"></audio>
+
+  <script>
+    let countdownInterval;
+    let timeLeft = 0;
+
+    function startTimer() {
+      const minutes = parseInt(document.getElementById("minutesInput").value);
+      if (isNaN(minutes) || minutes < 1) {
+        alert("Please enter a valid number of minutes.");
+        return;
+      }
+
+      timeLeft = minutes * 60;
+      updateDisplay();
+
+      clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        updateDisplay();
+
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById("alarmSound").play();
+          alert("Time's up!");
+        }
+      }, 1000);
+    }
+
+    function cancelTimer() {
+      clearInterval(countdownInterval);
+      document.getElementById("countdown").textContent = "00:00";
+    }
+
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById("countdown").textContent = 
+        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+  </script>
+
+</body>
+</html>
